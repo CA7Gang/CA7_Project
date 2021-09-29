@@ -1,3 +1,4 @@
 [submodule "CA7_Project_Modelling"]
 	path = CA7_Project_Modelling
 	url = https://github.com/CA7Gang/CA7_Project_Modelling.git
+	branch = master
