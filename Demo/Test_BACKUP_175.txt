@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+rasmus was here
+=======
+Laurits was here
+>>>>>>> 9505c1cb12d713b85ec7375c5657f930aa599129
