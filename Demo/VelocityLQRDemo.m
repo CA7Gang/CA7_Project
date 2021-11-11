@@ -53,7 +53,7 @@ R = 0.001.*eye(m,m); % Actuation cost
 
 x = zeros(3,1);
 dU = 0; % Control input delta
-x_real = zeros(n,1);
+x_real = zeros(n,1) + [1; -3];
 refval(1) = 5;
 uLQR(1) = 0;
 iters = 1000;
@@ -67,7 +67,7 @@ for ii = 1:iters
    yLQR(ii+1) = Cv*x;
  
    x_real(:,ii+1) = dNomSys.A*x_real(:,ii)+dNomSys.B*dU(ii+1);
-   y_real(ii+1,1) = dNomSys.C*x_real(:,ii+1);
+   y_real(ii+1,1) = dNomSys.C*x_real(:,ii+1)+0.1*randn(1,1);
    x(3) = y_real(ii+1,1)-refval(ii);
    
    
