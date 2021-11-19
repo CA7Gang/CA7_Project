@@ -58,7 +58,7 @@ G_pump22 = zpk(tf(Num_pump2(2,:),Denom_pump2))          %tf from in2 to out2
 g_delay = tf(num_Delay, den_Delay)
 
 
-figure(2)
+figure(21)
 step(G_pump11)
 hold on
 step(G_pump11*g_delay)
@@ -76,11 +76,11 @@ zero(G_pump22)'
 s = tf('s');
 G_pump1 = zpk(0.1147 * (s+0.1944)/((s+0.393)*(s+0.1597)))
 
-figure(3)
+figure(22)
 step(G_pump11,G_pump1)
 legend(["True tf", "Approximation"])
 
-figure(4)
+figure(23)
 bode(G_pump11,G_pump1)
 legend(["True tf", "Approximation"])
 
@@ -109,18 +109,18 @@ PI_med = 3.0756*(s+0.0497)/s		%bw = 0.1 stable
 PI_fast = 4.0756*(s+0.0497)/s		%bw = 0.2 stable but OS
 
 
-figure(1)
+figure(31)
 step(feedback(G_pump11*PI_slow,1),feedback(G_pump11*PI_slow*g_delay,1))
 hold on
 step(feedback(G_pump11*PI_med,1),feedback(G_pump11*PI_med*g_delay,1))
 step(feedback(G_pump11*PI_fast,1),feedback(G_pump11*PI_fast*g_delay,1))
 
-figure(2)
+figure(32)
 margin(G_pump11*PI_slow)
 hold on
 margin(G_pump11*PI_med)
 margin(G_pump11*PI_fast)
-legend("Slow","Mid","Fast")
+legend("Slow","Med","Fast")
 
 %% save figures
 savepath = 'C:\Users\kaspe\Documents\Git\Repos\CA7_Writings\CA7_Writings_Worksheets\Pictures'

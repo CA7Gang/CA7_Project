@@ -20,7 +20,7 @@ nomsys = ss(Ac,Bc,Cc,Dc);
 contsys = ss(A_error,B_error,C_error,Dc);
 % contsys = nomsys;
 
-fs = 10; Ts = 1/fs;
+fs = 0.1; Ts = 1/fs;
 
 dNomSys = c2d(nomsys,Ts);
 dSys = c2d(contsys,Ts);
@@ -35,16 +35,20 @@ ref = 5;
 
 % Construct velocity-form system matrices:
 
-Av = [dSys.A zeros(n,y); dSys.C eye(y,y)];
+% Av = [dSys.A zeros(n,y); dSys.C eye(y,y)];
+% Bv = [dSys.B ; zeros(y,m)];
+% Cv = [dSys.C eye(y,y)];
+
+Av = [dSys.A zeros(n,y); dSys.C*dSys.A eye(y,y)];
 Bv = [dSys.B ; zeros(y,m)];
-Cv = [dSys.C eye(y,y)];
+Cv = [zeros(y,n) eye(y,y)];
 
 VSys = ss(Av,Bv,Cv,[],Ts);
 
 % Make an LQR gain matrix
 
-Q = 1.*eye(y,y); % Reference deviation cost
-R = 0.001.*eye(m,m); % Actuation cost
+Q = Cv'*Cv; % Reference deviation cost
+R = 0.01.*eye(m,m); % Actuation cost
 
 [K,P,e] = lqr(VSys,Q,R);
 
@@ -52,24 +56,25 @@ R = 0.001.*eye(m,m); % Actuation cost
 
 
 x = zeros(3,1);
-dU = 0; % Control input delta
+dU(1) = 0; % Control input delta
 x_real = zeros(n,1) + [1; -3];
 refval(1) = 5;
-uLQR(1) = 0;
+uLQR(1) = 50;
 iters = 1000;
 yLQR(1) = 0;
 
 for ii = 1:iters
-   uLQR(ii+1) = -K*x;
-   dU(ii+1) = uLQR(ii+1)+dU(ii);
     
-   x = Av*x+Bv*uLQR(ii+1); 
+   dU(ii+1) = uLQR(ii)+dU(ii);
+    
+   x = Av*x+Bv*uLQR(ii); 
    yLQR(ii+1) = Cv*x;
  
    x_real(:,ii+1) = dNomSys.A*x_real(:,ii)+dNomSys.B*dU(ii+1);
-   y_real(ii+1,1) = dNomSys.C*x_real(:,ii+1)+0.1*randn(1,1);
+   y_real(ii+1,1) = dNomSys.C*x_real(:,ii+1);
    x(3) = y_real(ii+1,1)-refval(ii);
    
+   uLQR(ii+1) = -K*x;
    
    if (ii < ceil(2*iters/3)) && (ii > ceil(iters/3))
        refval(ii+1) = 2.5;
@@ -101,3 +106,6 @@ plot(refval,'--r')
 hold off
 title('Real System')
 legend('Process value','Reference')
+subplot(2,2,4)
+plot(dU)
+title('Full control input')
