@@ -1,5 +1,19 @@
 % Actual system/consumer behaviour simulation
 % ------------------------------------------------------------------------
+
+
+
+
+
+
+% Testing comment here
+
+
+
+
+
+
+
 clc; clear; close all;
 % Figure settings
 fig_pos_reg		= [1600 500 900 600];
@@ -72,12 +86,25 @@ S = [0 0 0
 	0 0 -w
 	0 w 0];
 
+
 B = [0; 0; 0];
 C = [1, 1, 0];
 
 % Discretized model of system
 S_d = (eye(3) + S.*ts)
 % B_d = B*ts
+
+
+
+
+
+
+% Testing comment here
+
+
+
+
+
 
 % Testing that manual discretization is correct
 % sys_ct = ss(S,B,C,0)
@@ -107,6 +134,18 @@ for n=2:N
     Pn = (eye(3) - Kn*C)*Pn_m;
 %  	Pn_compl = (eye(3) - Kn*C)*Pn_m*(eye(3)-Kn*C)' + Kn*Qv*Kn'
 end
+
+
+
+
+
+
+
+% Testing comment here
+
+
+
+
 
 
 f = figure()
